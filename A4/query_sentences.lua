@@ -3,6 +3,18 @@ require 'nngraph'
 require('base')
 stringx = require('pl.stringx')
 require 'io'
+ptb = require ('data')
+
+
+-- load model and dictionary
+model = torch.load('model.GRU.net')
+batch_size = 20
+state_train = {data=ptb.traindataset(batch_size)}
+-- vocab_invmap = torch.load('vocab_invmap.t7')
+-- vocab_map = torch.load('vocab_map.t7')
+vocab_invmap = ptb.vocab_invmap
+vocab_map = ptb.vocab_map
+
 
 function readline()
   local line = io.read("*line")
@@ -11,12 +23,6 @@ function readline()
   if tonumber(line[1]) == nil then error({code="init"}) end
   return line
 end
-
--- load model and dictionary
-model = torch.load('model.net')
-vocab_invmap = torch.load('vocab_invmap.t7')
-vocab_map = torch.load('vocab_map.t7')
-batch_size = 20
 
 g_disable_dropout(model.rnns)
 g_replace_table(model.s[0], model.start_s)
